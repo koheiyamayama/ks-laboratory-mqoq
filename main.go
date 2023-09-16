@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"net"
 	"os"
 	"sync"
@@ -58,7 +57,11 @@ func handleConnection(conn quic.Connection) error {
 		return err
 	}
 
-	fmt.Println("message: ", string(msg))
-
+	if string(msg) == "PING" {
+		err := conn.SendMessage([]byte("PONG"))
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
